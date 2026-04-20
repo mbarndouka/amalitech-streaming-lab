@@ -1,0 +1,15 @@
+[storage]
+output_dir = "data"
+
+[stream]
+min_event_per_file = 5
+max_event_per_file = 20
+sleep_internal_sec = 5
+
+[ecommerce]
+actions = ["view", "add_to_cart", "purchase"]
+products = ["laptop", "smartphone", "headphones", "camera", "smartwatch"]
+users = ["user1", "user2", "user3", "user4", "user5"]
+
+[logging]
+level = "INFO"

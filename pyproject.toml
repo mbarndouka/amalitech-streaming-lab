@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "e-commerce steaming simulator"
+version = "0.1.0"
+description = "A simulator for e-commerce streaming data."
+authors = [
+    { name = "Your Name", email = "mmbarndouka@gmail.com" }
+]
+requires-python = ">=3.11"
