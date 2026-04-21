@@ -11,5 +11,17 @@ actions = ["view", "add_to_cart", "purchase"]
 products = ["laptop", "smartphone", "headphones", "camera", "smartwatch"]
 users = ["user1", "user2", "user3", "user4", "user5"]
 
+[database]
+dbname = "ecommerce"
+driver = "org.postgresql.Driver"
+table_name = "ecommerce_events"
+url = "jdbc:postgresql://localhost:5432/ecommerce"
+
+[spark]
+app_name = "EcommerceStreamingPipeline"
+checkpoint_dir = "data/checkpoints"
+# We tell Spark to automatically download the Postgres JDBC driver
+jdbc_package = "org.postgresql:postgresql:42.6.0"
+
 [logging]
 level = "INFO"

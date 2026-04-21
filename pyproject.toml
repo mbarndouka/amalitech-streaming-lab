@@ -3,10 +3,21 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "e-commerce steaming simulator"
+name = "e-commerceSteamingSimulator"
 version = "0.1.0"
-description = "A simulator for e-commerce streaming data."
+description = "A-simulator-for_e-commerce-streaming-data."
 authors = [
-    { name = "Your Name", email = "mmbarndouka@gmail.com" }
+    { name = "Mbarndouka", email = "mmbarndouka@gmail.com" }
 ]
 requires-python = ">=3.11"
+
+dependencies = [
+    "dotenv>=0.9.9",
+    "pyspark>=3.5.0",
+]
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "black>=24.0.0",
+    "flake8>=4.0.0",
+    ]

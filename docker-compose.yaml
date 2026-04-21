@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16.0-alpine  
+    # Load passwords and configs from your .env file
+    env_file:
+      - .env
+    # The environment section maps the variables from .env directly into the postgres image
+    ports:
+      - "5432:5432"
+    volumes:
+      # Mount the SQL script so postgres automatically runs it on initialization
+      - ./postgres.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
