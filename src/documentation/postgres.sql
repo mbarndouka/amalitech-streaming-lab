@@ -14,4 +14,4 @@ CREATE TABLE IF NOT EXISTS ecommerce_events (
     processed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-SELECT * FROM ecommerce_events WHERE user_id = 999;
+SELECT * FROM ecommerce_events WHERE =user_id = 999;

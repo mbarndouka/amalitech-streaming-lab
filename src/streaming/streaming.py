@@ -1,15 +1,15 @@
 import os
-from src.config import config as get_config
+from config.config import config as get_config
 from src.utils import logger as get_logger
-from src.spark_session import get_spark_session
-from src.pipeline import build_pipeline
+from config.spark_session import get_spark_session
+from streaming.pipeline import build_pipeline
 from src.utils import handle_error
 
 
 def run_stream() -> None:
     """Runs the stream."""
     # Ensure config path is absolute relative to project root so the separate process finds it
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     config_path = os.path.join(base_dir, "config.toml")
 
     config = get_config(config_path)

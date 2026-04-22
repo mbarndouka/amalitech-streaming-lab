@@ -2,9 +2,9 @@ import logging
 from pyspark.sql import SparkSession
 from typing import Dict, Any
 
-from src.schema import get_schema
-from src.transformation import transform_events
-from src.write_to_postgres import write_to_postgres
+from streaming.schema import get_schema
+from streaming.transformation import transform_events
+from streaming.write_to_postgres import write_to_postgres
 
 
 def build_pipeline(spark: SparkSession, db_config: Dict[str, Any]) -> None:

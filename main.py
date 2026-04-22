@@ -3,12 +3,12 @@ import random
 import os
 import multiprocessing
 
-from src.config import config as get_config
-from src.generator import generate_batch
-from src.io import write_to_csv, ensure_directory_exists
+from config.config import config as get_config
+from generator.generator import generate_batch
+from generator.io import write_to_csv, ensure_directory_exists
 from src.utils import logger as get_logger, handle_error
 # Import the stream runner from streaming.py
-from src.streaming import run_stream as run_spark_stream
+from streaming.streaming import run_stream as run_spark_stream
 
 
 def run_data_generator(config: dict, logger) -> None:

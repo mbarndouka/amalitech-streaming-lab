@@ -3,15 +3,15 @@ import uuid
 from datetime import datetime
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType, TimestampType
 
-from src.config import config as get_config
-from src.spark_session import get_spark_session
-from src.write_to_postgres import write_to_postgres
+from config.config import config as get_config
+from config.spark_session import get_spark_session
+from streaming.write_to_postgres import write_to_postgres
 
 
 def test_db_write():
     # 1. Load the configuration
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    conf = get_config(os.path.join(base_dir, "config.toml"))
+    conf = get_config(os.path.join(base_dir, "../config.toml"))
 
     # 2. Initialize Spark with the JDBC driver
     spark = get_spark_session(
