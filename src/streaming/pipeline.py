@@ -13,7 +13,17 @@ pipline_logger = get_logger("Pipeline", "INFO")
 
 
 def build_pipeline(spark: SparkSession, db_config: Dict[str, Any]) -> None:
-    """Builds the pipeline."""
+    """
+    Constructs and runs the Spark Structured Streaming pipeline.
+
+    This pipeline reads raw CSV data from the output directory, transforms
+    the events to match our target schema, and continuously writes the results
+    to a PostgreSQL database using a foreachBatch sink.
+
+    Args:
+        spark (SparkSession): The active Spark Session.
+        db_config (Dict[str, Any]): Dictionary containing configuration for storage, spark, and the database.
+    """
 
     storage_cfg = db_config["storage"]
     spark_cfg = db_config["spark"]

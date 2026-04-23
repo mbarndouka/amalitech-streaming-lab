@@ -9,7 +9,14 @@ from src.utils import handle_error
 
 
 def run_stream() -> None:
-    """Runs the stream."""
+    """
+    Main entry point for starting the Spark streaming process.
+
+    This function discovers the configuration file, sets up the logger, initializes
+    the SparkSession with the necessary JDBC packages, and starts the pipeline.
+    It catches exceptions and keyboard interrupts to ensure that the Spark
+    session is stopped cleanly upon exit.
+    """
     # Ensure config path is absolute relative to project root so the separate process finds it
     base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     config_path = os.path.join(base_dir, "config.toml")

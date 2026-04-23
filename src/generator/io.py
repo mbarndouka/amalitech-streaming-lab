@@ -4,13 +4,28 @@ from datetime import datetime
 from typing import List, Dict, Any
 
 def ensure_directory_exists(filepath: str) -> None:
-    """Ensures that the directory for the given filepath exists."""
+    """
+    Ensures that the directory for the given filepath exists.
+    Creates any intermediate directories as needed without raising an error if they already exist.
+
+    Args:
+        filepath (str): The directory path to check or create.
+    """
     os.makedirs(filepath, exist_ok=True)
     return filepath
 
 
 def write_to_csv(events: List[Dict[str, Any]], output_dir:str) -> str:
-    """Writes the given data to a CSV file."""
+    """
+    Writes a list of event dictionaries to a timestamped CSV file.
+
+    Args:
+        events (List[Dict[str, Any]]): The batch of events to write.
+        output_dir (str): The directory where the CSV file should be saved.
+
+    Returns:
+        str: The absolute path to the generated CSV file, or an empty string if events list is empty.
+    """
     if not events:
         return ""
 

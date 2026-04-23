@@ -31,8 +31,17 @@ def format_metrics_log(metrics: Dict[str, Any]) -> str:
 
 def create_performance_listener(logger: logging.Logger) -> StreamingQueryListener:
     """
-    Closure that creates and returns an adapter for PySpark.
-    This hides the OOP requirement from the rest of our functional codebase.
+    Creates and returns a functional listener adapter for PySpark.
+
+    This abstracts away the OOP requirements of PySpark's StreamingQueryListener,
+    allowing us to supply a standard logger and handle stream progress events
+    by extracting and recording meaningful performance metrics (latency, throughput).
+
+    Args:
+        logger (logging.Logger): The logger to use for reporting stream events.
+
+    Returns:
+        StreamingQueryListener: An initialized PySpark query listener.
     """
     class FunctionalListenerAdapter(StreamingQueryListener):
         def onQueryStarted(self, event: Any) -> None:

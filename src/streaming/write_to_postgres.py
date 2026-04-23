@@ -6,8 +6,16 @@ from src.utils import logger as get_logger
 
 def write_to_postgres(batch_df: DataFrame, batch_id: int, db_config: Dict[str, Any]) -> None:
     """
-    Writes a single micro-batch DataFrame to PostgreSQL.
-    This acts as a side-effect isolated to the micro-batch execution.
+    Writes a single micro-batch of transformed data to PostgreSQL.
+
+    This function is executed for each micro-batch in the streaming query.
+    It configures the JDBC writer to properly map string values to UUID
+    columns on the PostgreSQL side and saves the batch in 'append' mode.
+
+    Args:
+        batch_df (DataFrame): The data frame containing the current micro-batch.
+        batch_id (int): The unique identifier for the micro-batch.
+        db_config (Dict[str, Any]): The merged dictionary with configuration values.
     """
     # Fix: Store the initialized logger into a variable to avoid missing arguments later
     batch_logger = get_logger("PostgresWriter", db_config["logging"]["level"])

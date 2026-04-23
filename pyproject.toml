@@ -12,7 +12,6 @@ authors = [
 requires-python = ">=3.11"
 
 dependencies = [
-    "dotenv>=0.9.9",
     "pyspark>=3.5.0",
     "python-dotenv>=1.2.2",
 ]

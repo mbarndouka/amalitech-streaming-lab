@@ -5,7 +5,20 @@ from dotenv import load_dotenv
 
 
 def config(filepath: str) -> Dict[str, Any]:
-    """Reads the config file and applies environment overrides."""
+    """
+    Reads the TOML configuration file and applies environment overrides.
+
+    This function loads settings from the specified TOML file and overrides
+    database properties (like user, password, and host) if corresponding
+    environment variables are set via a .env file. It also automatically
+    constructs the necessary JDBC options used for PostgreSQL connections.
+
+    Args:
+        filepath (str): The absolute path to the config.toml file.
+
+    Returns:
+        Dict[str, Any]: A dictionary containing the final configuration.
+    """
     # Load environment variables from .env
     load_dotenv()
 

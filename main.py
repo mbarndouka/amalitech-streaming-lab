@@ -12,7 +12,17 @@ from streaming.streaming import run_stream as run_spark_stream
 
 
 def run_data_generator(config: dict, logger) -> None:
-    """Runs the data generation loop."""
+    """
+    Continuously generates mock e-commerce transactions and writes them to CSV files.
+
+    This function runs in a loop, simulating real-time activity by creating random
+    batches of events according to the provided configuration ranges. The generated
+    CSV files serve as the raw input for the streaming pipeline.
+
+    Args:
+        config (dict): The configuration dictionary containing settings for storage, streaming, and e-commerce parameters.
+        logger: The application logger used to record generator events.
+    """
     storage_cfg = config["storage"]
     stream_cfg = config["stream"]
     ecommerce_cfg = config["ecommerce"]
@@ -43,7 +53,13 @@ def run_data_generator(config: dict, logger) -> None:
 
 
 def main() -> None:
-    """Application entry point."""
+    """
+    The main entry point for the e-commerce streaming simulator.
+
+    This function spins up a separate background multiprocessing process for the
+    Spark structured streaming pipeline and then executes the continuous data generator
+    in the main thread. It handles keyboard interrupts to shut down both processes gracefully.
+    """
     base_dir = os.path.dirname(os.path.abspath(__file__))
     config_path = os.path.join(base_dir, "config.toml")
     config = get_config(config_path)
