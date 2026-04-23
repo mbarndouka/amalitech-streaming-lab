@@ -6,6 +6,11 @@ from streaming.schema import get_schema
 from streaming.transformation import transform_events
 from streaming.write_to_postgres import write_to_postgres
 
+from spark_listeners import create_performance_listener
+from src.utils import logger as get_logger
+
+pipline_logger = get_logger("Pipeline", "INFO")
+
 
 def build_pipeline(spark: SparkSession, db_config: Dict[str, Any]) -> None:
     """Builds the pipeline."""
@@ -14,12 +19,15 @@ def build_pipeline(spark: SparkSession, db_config: Dict[str, Any]) -> None:
     spark_cfg = db_config["spark"]
     db_cfg = db_config["database"]
 
-    logging.info(f"Building pipeline with config: {storage_cfg['output_dir']}")
+    listener = create_performance_listener(pipline_logger)
+    spark.streams.addListener(listener)
+
+    pipline_logger.info(f"Building pipeline with config: {storage_cfg['output_dir']}")
     raw_stream_df = spark.readStream.format("csv").schema(get_schema()).option("header", "true").option(
         "maxFilesPerTrigger", 1).load(storage_cfg["output_dir"])
     transformed_stream_df = transform_events(raw_stream_df)
 
-    logging.info("Writing to PostgreSQL")
+    pipline_logger.info("Writing to PostgreSQL")
     query = transformed_stream_df.writeStream.foreachBatch(
         lambda df, batch_id: write_to_postgres(df, batch_id, db_config)).option("checkpointLocation",
                                                                                 spark_cfg["checkpoint_dir"]).trigger(
