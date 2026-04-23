@@ -1,12 +1,13 @@
 import logging
 from typing import NoReturn
+from pythonjsonlogger.json import JsonFormatter
 
 def logger(name:str, level:str) ->  logging.Logger:
     """
-    Creates and configures a logger instance with a standard format.
+    Creates and configures a logger instance with a structured JSON format.
 
     If the logger does not already have handlers, a StreamHandler is added
-    with a specific formatting style.
+    with JSON formatting style.
 
     Args:
         name (str): The name to assign to the logger.
@@ -20,7 +21,7 @@ def logger(name:str, level:str) ->  logging.Logger:
     if not log.handlers:
         log.setLevel(getattr(logging, level.upper(), logging.INFO))
         handler = logging.StreamHandler()
-        formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+        formatter = JsonFormatter("%(asctime)s %(name)s %(levelname)s %(message)s")
         handler.setFormatter(formatter)
         log.addHandler(handler)
     return log

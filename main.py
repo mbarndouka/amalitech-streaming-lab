@@ -3,12 +3,36 @@ import random
 import os
 import multiprocessing
 
+from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception_type
+
 from config.config import config as get_config
 from generator.generator import generate_batch
 from generator.io import write_to_csv, ensure_directory_exists
 from src.utils import logger as get_logger, handle_error
 # Import the stream runner from streaming.py
 from streaming.streaming import run_stream as run_spark_stream
+
+
+@retry(
+    wait=wait_exponential(multiplier=1, min=2, max=10),
+    stop=stop_after_attempt(5),
+    retry=retry_if_exception_type(Exception),
+    reraise=True
+)
+def generate_and_write_batch(stream_cfg, ecommerce_cfg, storage_cfg, logger):
+    batch_size = random.randint(
+        stream_cfg["min_event_per_file"],
+        stream_cfg["max_event_per_file"]
+    )
+
+    events = generate_batch(
+        batch_size,
+        ecommerce_cfg["actions"],
+        ecommerce_cfg["products"]
+    )
+    filepath = write_to_csv(events, storage_cfg["output_dir"])
+    logger.info(f"Wrote {len(events)} events to {filepath}")
+    time.sleep(stream_cfg["sleep_internal_sec"])
 
 
 def run_data_generator(config: dict, logger) -> None:
@@ -32,19 +56,7 @@ def run_data_generator(config: dict, logger) -> None:
 
     try:
         while True:
-            batch_size = random.randint(
-                stream_cfg["min_event_per_file"],
-                stream_cfg["max_event_per_file"]
-            )
-
-            events = generate_batch(
-                batch_size,
-                ecommerce_cfg["actions"],
-                ecommerce_cfg["products"]
-            )
-            filepath = write_to_csv(events, storage_cfg["output_dir"])
-            logger.info(f"Wrote {len(events)} events to {filepath}")
-            time.sleep(stream_cfg["sleep_internal_sec"])
+            generate_and_write_batch(stream_cfg, ecommerce_cfg, storage_cfg, logger)
     except KeyboardInterrupt:
         logger.info("Data generator shut down by user.")
         raise
