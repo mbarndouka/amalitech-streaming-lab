@@ -37,6 +37,7 @@ def run_data_generator(config: dict, logger) -> None:
             time.sleep(stream_cfg["sleep_internal_sec"])
     except KeyboardInterrupt:
         logger.info("Data generator shut down by user.")
+        raise
     except Exception as e:
         handle_error(logger, e)
 
@@ -49,6 +50,8 @@ def main() -> None:
 
     logger = get_logger("Orchestrator", config["logging"]["level"])
 
+    spark_process = None
+
     try:
         # Start Spark Stream as a background Process
         logger.info("Starting Spark consumer process...")
@@ -59,10 +62,13 @@ def main() -> None:
         run_data_generator(config, logger)
 
     except KeyboardInterrupt:
-        logger.info("Graceful shutdown triggered by user.")
-        if 'spark_process' in locals() and spark_process.is_alive():
-            spark_process.terminate()
-            spark_process.join()
+        logger.info("Graceful shutdown triggered by user. Waiting for Spark to exit...")
+        if spark_process is not None and spark_process.is_alive():
+            spark_process.join(timeout=10)
+            if spark_process.is_alive():
+                logger.warning("Spark process didn't exit in time, forcing termination.")
+                spark_process.terminate()
+                spark_process.join()
             logger.info("Spark consumer process terminated.")
     except Exception as e:
         handle_error(logger, e)

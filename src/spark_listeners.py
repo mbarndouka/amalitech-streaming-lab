@@ -29,9 +29,6 @@ def format_metrics_log(metrics: Dict[str, Any]) -> str:
         f"Process Rate: {metrics['process_rate']:.1f} rows/sec"
     )
 
-# ==========================================
-# 2. IMPURE EDGE (The Object-Oriented Adapter)
-# ==========================================
 def create_performance_listener(logger: logging.Logger) -> StreamingQueryListener:
     """
     Closure that creates and returns an adapter for PySpark.

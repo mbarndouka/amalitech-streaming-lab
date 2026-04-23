@@ -32,4 +32,10 @@ def build_pipeline(spark: SparkSession, db_config: Dict[str, Any]) -> None:
         lambda df, batch_id: write_to_postgres(df, batch_id, db_config)).option("checkpointLocation",
                                                                                 spark_cfg["checkpoint_dir"]).trigger(
         processingTime="5 seconds").start()
-    query.awaitTermination()
+
+    try:
+        query.awaitTermination()
+    except KeyboardInterrupt:
+        pipline_logger.info("Gracefully stopping the Spark streaming query...")
+        query.stop()
+        pipline_logger.info("Query stopped.")
